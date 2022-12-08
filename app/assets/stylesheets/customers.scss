@@ -1,0 +1,118 @@
+// Place all the styles related to the customers controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.container {
+  padding: 12px;
+}
+
+.lower-container {
+  background-color: #CCCCCC;
+  padding: 20px;
+}
+
+.bill-generated-lower-container {
+  text-align: right;
+  background-color: #CCCCCC;
+  padding: 20px;
+}
+
+.add-new-btn {
+  height: 42px;
+  width: 140px;
+  color: #ffffff;
+  background-color: #1fafed;
+  border-width: 0;
+  border-radius: 4px;
+}
+
+.generate-btn {
+  height: 42px;
+  width: 200px;
+  color: #ffffff;
+  background-color: #1fafed;
+  border-width: 0;
+  border-radius: 4px;
+  margin: 10px;
+}
+
+.delete-btn {
+  height: 50px;
+  width: 200px;
+  color: indianred;
+  background-color: lightpink;
+  border-width: 0;
+  border-radius: 4px;
+  margin: 10px;
+}
+
+.cancel-btn {
+  height: 42px;
+  width: 200px;
+  color: grey;
+  background-color: #DADADA;
+  border-width: 0;
+  border-radius: 4px;
+  margin: 10px;
+}
+
+input {
+  height: 50px;
+  width: 200px;
+  padding: 12px;
+  background-color: #d7e5fa;
+  border-width: 0;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+label {
+  text-align: left;
+}
+
+.denominations {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  flex-wrap: wrap;
+  padding: 12px;
+}
+
+select {
+  height: 50px;
+  width: 200px;
+  padding: 10px;
+  background-color: #d7e5fa;
+  border-width: 0;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.heading-row {
+  background-color: #f0f0f0;
+  color: #999999;
+}
+
+.value-row {
+  background-color: aliceblue;
+}
+
+.balance-quantity {
+  height: 42px;
+  width: 140px;
+  padding: 10px;
+  margin-left: 10px;
+  border-radius: 4px;
+  background-color: aliceblue;
+}
+
+.balance-denomination {
+  padding: 10px;
+  margin-right: 10px;
+}

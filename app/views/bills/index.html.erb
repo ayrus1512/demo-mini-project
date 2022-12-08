@@ -1,0 +1,81 @@
+<form id="billingForm" action="/bills", method="POST">
+  <div class="container">
+    <h1>Billing System</h1>
+
+    <div class="pt-3 pb-3">
+      <label for="customer_email">Customer Email</label>
+      <input type="email" name="email" id="customer_email" placeholder="Enter Email Address" />
+    </div>
+
+    <%#= render "bills/form", bill: @bill %>
+  </div>
+
+  <hr>
+
+  <div class="container">
+    <div class="d-flex flex-row justify-content-between">
+      <h1>Bill Section</h1>
+      <button class="add-new-btn">Add New</button>
+    </div>
+
+
+    <%= collection_select(:product, :id, Product.all, :id, :name, prompt: "Product Name" ) %>
+    <%= select(:product, :quantity, ((1..10).map {|i| [i,i] }), prompt: "Quantity") %>
+  </div>
+
+  <hr>
+
+  <div class="container">
+    <h1>Denominations</h1>
+
+    <div class="denominations col-6">
+      <div class="pt-3 pb-3">
+        <label for="denomination_500">500</label>
+        <input type="number" name="500" id="denomination_500" placeholder="Quantity" />
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="denomination_100">100</label>
+        <input type="number" name="100" id="denomination_100" placeholder="Quantity" />
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="denomination_50">50</label>
+        <input type="number" name="50" id="denomination_50" placeholder="Quantity" />
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="denomination_10">10</label>
+        <input type="number" name="10" id="denomination_10" placeholder="Quantity" />
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="denomination_5">5</label>
+        <input type="number" name="5" id="denomination_5" placeholder="Quantity" />
+      </div>
+
+      <div class="pt-3 pb-3">
+        <label for="denomination_1">1</label>
+        <input type="number" name="1" id="denomination_1" placeholder="Quantity" />
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="lower-container ">
+    <div class="d-flex flex-row justify-content-between m-3">
+      <div class="pt-3 pb-3">
+        <label for="total_cash">Cash paid by Customer</label>
+        <input type="number" style="background-color: #f0f0f0" name="cash" id="total_cash" placeholder="Amount" />
+      </div>
+
+      <div class="pt-3 pb-3">
+        <button class="cancel-btn">Cancel</button>
+        <button class="generate-btn">Generate Bill</button>
+      </div>
+    </div>
+
+
+  </div>
+</form>

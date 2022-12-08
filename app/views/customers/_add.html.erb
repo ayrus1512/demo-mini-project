@@ -1,0 +1,6 @@
+<div class="mt-3">
+  <%= customer_product.collection_select(:id, Product.all, :id, :name, prompt: "Product Name", multiple: true) %>
+  <%= customer_product.select(:customer_product, :quantity, ((1..10).map {|i| [i,i] }), prompt: "Quantity", multiple: true) %>
+  <button class="delete-btn">Delete</button>
+</div>
+
