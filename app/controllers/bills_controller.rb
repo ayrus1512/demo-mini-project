@@ -9,6 +9,7 @@ class BillsController < ApplicationController
 
   # GET /bills/1 or /bills/1.json
   def show
+    balance_denomination(@bill)
   end
 
   # GET /bills/new
@@ -72,5 +73,32 @@ class BillsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def bill_params
       params.require(:bill).permit(:email)
+    end
+
+    def balance_denomination(bill)
+      balance = bill.balance_amount
+      @denomination_500, @denomination_100, @denomination_50 = 0, 0, 0
+      @denomination_10, @denomination_5, @denomination_1 = 0, 0, 0
+      while balance != 0
+        if balance >= 500
+          @denomination_500 = (balance/500).to_i
+          balance -= (@denomination_500 * 500)
+        elsif balance >= 100 && balance < 500
+          @denomination_100 = (balance/100).to_i
+          balance -= (@denomination_100 * 100)
+        elsif balance >= 50 && balance < 100
+          @denomination_50 = (balance/50).to_i
+          balance -= (@denomination_50 * 50)
+        elsif balance >= 10 && balance < 50
+          @denomination_10 = (balance/10).to_i
+          balance -= (@denomination_10 * 10)
+        elsif balance >= 5 && balance < 10
+          @denomination_5 = (balance/5).to_i
+          balance -= (@denomination_5 * 5)
+        elsif balance >= 1
+          @denomination_1 = (balance/1).to_i
+          balance -= (@denomination_1 * 1)
+        end
+      end
     end
 end

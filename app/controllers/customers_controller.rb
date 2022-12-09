@@ -22,29 +22,26 @@ class CustomersController < ApplicationController
   def edit
   end
 
-  # GET /display_bills
-  def display_bills
-    @customer = Customer.last
-    @product = Product.last
-    @customer_products = CustomerProduct.last(4)
-    @bill_generated = Bill.last
-    balance_denomination(@bill_generated)
-  end
-
   # POST /customers or /customers.json
   def create
-    helpers.denomination_check
+    denomination_check
+    if @condition
+      @customer = Customer.find_or_create_by(email: params[:customer][:email])
 
-    @customer = Customer.find_or_create_by(email: params[:customer][:email])
+      calculation_part(params[:customer][:customer_products_attributes], @customer, params[:cash].to_i)
 
-    calculation_part(params[:customer][:customer_products_attributes], @customer, params[:cash].to_i)
-
-    respond_to do |format|
-      if @customer.valid?
-        format.html { redirect_to display_bills_url, notice: "Entry Created." }
-        format.json { render :show, status: :created, location: @customer }
-      else
-        format.html { render :new, status: :unprocessable_entity }
+      respond_to do |format|
+        if @customer.valid? && !@bill.nil?
+          format.html { redirect_to bill_url(@bill), notice: "New Bill was successfully created." }
+          format.json { render :show, status: :created, location: @customer }
+        else
+          format.html { redirect_to new_customer_url, notice: "Given Cash Amount is insufficient." }
+          format.json { render json: @customer.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to new_customer_url, notice: "Given Cash Amount does not tally with given denomination." }
         format.json { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
@@ -86,7 +83,20 @@ class CustomersController < ApplicationController
             .permit(:email, :product, customer_products_attributes: [:id, :quantity])
     end
 
-    def calculation_part(customer_product_attributes, customer, cash)
+    def denomination_check
+      condition = (params[:denomination_500].to_i * 500) +
+        (params[:denomination_100].to_i * 100) +
+        (params[:denomination_50].to_i * 50) +
+        (params[:denomination_10].to_i * 10) +
+        (params[:denomination_5].to_i * 5) + (params[:denomination_1].to_i * 1)
+      if condition == params[:cash].to_i
+        @condition = true
+      else
+        @condition = false
+      end
+    end
+
+    def calculation_part(customer_product_attributes, customer, cash_given)
       @customer_products = []
       calculation_list = []
       total_purchased_prize, total_tax_amount, total_bill_amount = 0, 0, 0
@@ -113,43 +123,29 @@ class CustomersController < ApplicationController
         total_bill_amount += c[2]
       end
 
-      total_bill_amount
       rounded_bill_amount = total_bill_amount
-      balance_amount = cash - rounded_bill_amount
 
-      @bill_generated = Bill.create(customer_id: customer.id,
-                                    cash_given: cash,
-                                    total_purchased_prize: total_purchased_prize.round(2),
-                                    total_tax_amount: total_tax_amount.round(2),
-                                    total_bill_amount: total_bill_amount.round(2),
-                                    rounded_bill_amount: (rounded_bill_amount.round()).to_f,
-                                    balance_amount: balance_amount.round(2))
-    end
+      if cash_given >= rounded_bill_amount
+        balance_amount = cash_given - rounded_bill_amount
 
-    def balance_denomination(bill_generated)
-      balance = bill_generated.balance_amount
-      @denomination_500, @denomination_100, @denomination_50 = 0, 0, 0
-      @denomination_10, @denomination_5, @denomination_1 = 0, 0, 0
-      while balance != 0
-        if balance >= 500
-          @denomination_500 = (balance/500).to_i
-          balance -= (@denomination_500 * 500)
-        elsif balance >= 100 && balance < 500
-          @denomination_100 = (balance/100).to_i
-          balance -= (@denomination_100 * 100)
-        elsif balance >= 50 && balance < 100
-          @denomination_50 = (balance/50).to_i
-          balance -= (@denomination_50 * 50)
-        elsif balance >= 10 && balance < 50
-          @denomination_10 = (balance/10).to_i
-          balance -= (@denomination_10 * 10)
-        elsif balance >= 5 && balance < 10
-          @denomination_5 = (balance/5).to_i
-          balance -= (@denomination_5 * 5)
-        elsif balance >= 1
-          @denomination_1 = (balance/1).to_i
-          balance -= (@denomination_1 * 1)
+        @bill = Bill.create(customer_id: customer.id,
+                            cash_given: cash_given,
+                            total_purchased_prize: total_purchased_prize.round(2),
+                            total_tax_amount: total_tax_amount.round(2),
+                            total_bill_amount: total_bill_amount.round(2),
+                            rounded_bill_amount: (rounded_bill_amount.round()).to_f,
+                            balance_amount: balance_amount.round())
+
+        @customer_products.each do |customer_product|
+          customer_product = CustomerProduct.find(customer_product.id)
+          @bill.customer_products << customer_product
+        end
+
+      else
+        @customer_products.each do |customer_product|
+          customer_product.destroy
         end
       end
+
     end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_08_071043) do
+ActiveRecord::Schema.define(version: 2022_12_09_083145) do
 
   create_table "bills", force: :cascade do |t|
     t.integer "customer_id", null: false
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(version: 2022_12_08_071043) do
     t.float "rounded_bill_amount"
     t.float "balance_amount"
     t.index ["customer_id"], name: "index_bills_on_customer_id"
+  end
+
+  create_table "bills_customer_products", force: :cascade do |t|
+    t.integer "bill_id", null: false
+    t.integer "customer_product_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["bill_id"], name: "index_bills_customer_products_on_bill_id"
+    t.index ["customer_product_id"], name: "index_bills_customer_products_on_customer_product_id"
   end
 
   create_table "customer_products", force: :cascade do |t|
@@ -53,6 +62,8 @@ ActiveRecord::Schema.define(version: 2022_12_08_071043) do
   end
 
   add_foreign_key "bills", "customers"
+  add_foreign_key "bills_customer_products", "bills"
+  add_foreign_key "bills_customer_products", "customer_products"
   add_foreign_key "customer_products", "customers"
   add_foreign_key "customer_products", "products"
 end
