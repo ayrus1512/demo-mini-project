@@ -12,6 +12,9 @@ Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
 
+require('./nested-forms/addFields')
+require('./nested-forms/removeFields')
+
 require("@popperjs/core")
 
 import "bootstrap"
@@ -35,11 +38,3 @@ document.addEventListener("turbolinks:load", () => {
         return new Popover(popoverTriggerEl)
     })
 })
-
-import $ from 'jquery';
-
-$(document).ready(() => {
-    $('.add-new-btn').on('click', function () {
-        $(this).getElementById('input-body').innerHTML += ("<%= escape_javascript(render :partial =>'customers/add' %>");
-    });
-});

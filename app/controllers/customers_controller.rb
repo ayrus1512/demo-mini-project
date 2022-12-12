@@ -13,9 +13,7 @@ class CustomersController < ApplicationController
   # GET /customers/new
   def new
     @customer = Customer.new
-    4.times do
-      @customer.customer_products.build
-    end
+    @customer.customer_products.build
   end
 
   # GET /customers/1/edit
@@ -80,7 +78,7 @@ class CustomersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def customer_params
       params.require(:customer)
-            .permit(:email, :product, customer_products_attributes: [:id, :quantity])
+            .permit(:email, :product, customer_products_attributes: [:id, :quantity, :_destroy])
     end
 
     def denomination_check

@@ -1,0 +1,10 @@
+<div class="nested-fields">
+  <%= f.hidden_field :_destroy %>
+  <div>
+    <%= f.collection_select(:id, Product.all, :id, :name, prompt: "Product Name") %>
+    <%= f.select(:quantity, ((1..10).map {|i| [i,i] }), prompt: "Quantity") %>
+  </div>
+  <div>
+    <%= link_to "Remove", '#', class: "remove_fields" %>
+  </div>
+</div>

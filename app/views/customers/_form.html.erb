@@ -26,20 +26,17 @@
   <div class="container">
     <div class="d-flex flex-row justify-content-between">
       <h1>Bill Section</h1>
-      <button class="add-new-btn">
-        <%= link_to "Add New", new_customer_path, remote: true %>
-      </button>
     </div>
 
     <div class="d-flex flex-column" id="input-body">
       <%= form.fields_for :customer_products do |customer_product| %>
         <div class="mt-3">
-          <%= customer_product.collection_select(:id, Product.all, :id, :name, prompt: "Product Name") %>
-          <%= customer_product.select(:quantity, ((1..10).map {|i| [i,i] }), prompt: "Quantity") %>
-          <button class="delete-btn">Delete</button>
+          <%= render "customer_product_fields", f: customer_product %>
         </div>
       <% end %>
+      <%= link_to_add_fields "Add Input Fields", form, :customer_products %>
     </div>
+
   </div>
 
   <hr>
