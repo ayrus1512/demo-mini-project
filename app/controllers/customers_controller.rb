@@ -100,19 +100,26 @@ class CustomersController < ApplicationController
       total_purchased_prize, total_tax_amount, total_bill_amount = 0, 0, 0
 
       customer_product_attributes.each do |key, value|
-        quantity = value[:quantity]
-        product_id = value[:id]
-        product = Product.find(product_id)
-        purchased_prize = quantity.to_f * (product.unit_prize)
-        tax_amount = ((product.tax_percentage/ 100) * purchased_prize).truncate(2)
-        total_prize = purchased_prize + tax_amount
-        calculation_list.append([purchased_prize, tax_amount, total_prize])
+        puts key, value
+        if value[:_destroy] != "removed" && value[:quantity] != "" && value[:id] != ""
+          puts value[:_destroy]
+          puts value[:id]
+          puts value[:quantity]
+          puts "----------------"
+          quantity = value[:quantity]
+          product_id = value[:id]
+          product = Product.find(product_id)
+          purchased_prize = quantity.to_f * (product.unit_prize)
+          tax_amount = ((product.tax_percentage/ 100) * purchased_prize).truncate(2)
+          total_prize = purchased_prize + tax_amount
+          calculation_list.append([purchased_prize, tax_amount, total_prize])
 
-        customer_product = CustomerProduct.create(product_id: product.id, customer_id: customer.id,
-                                                  quantity: quantity, purchased_prize: purchased_prize,
-                                                  tax_amount: tax_amount, total_prize: total_prize)
+          customer_product = CustomerProduct.create(product_id: product.id, customer_id: customer.id,
+                                                    quantity: quantity, purchased_prize: purchased_prize,
+                                                    tax_amount: tax_amount, total_prize: total_prize)
 
-        @customer_products.append(customer_product)
+          @customer_products.append(customer_product)
+        end
       end
 
       calculation_list.each do |c|

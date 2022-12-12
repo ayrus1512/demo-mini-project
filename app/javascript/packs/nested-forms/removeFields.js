@@ -26,7 +26,7 @@ class removeFields {
             : null
         // If there is a delete field, update the value to `1` and hide the corresponding nested fields.
         if (deleteField) {
-            deleteField.value = 1
+            deleteField.value = "removed"
             fieldParent.style.display = 'none'
         }
     }
