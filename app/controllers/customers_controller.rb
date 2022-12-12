@@ -100,12 +100,7 @@ class CustomersController < ApplicationController
       total_purchased_prize, total_tax_amount, total_bill_amount = 0, 0, 0
 
       customer_product_attributes.each do |key, value|
-        puts key, value
         if value[:_destroy] != "removed" && value[:quantity] != "" && value[:id] != ""
-          puts value[:_destroy]
-          puts value[:id]
-          puts value[:quantity]
-          puts "----------------"
           quantity = value[:quantity]
           product_id = value[:id]
           product = Product.find(product_id)
